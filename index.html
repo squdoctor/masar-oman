@@ -3069,6 +3069,44 @@ header a[data-masar-nav]{white-space:nowrap}
 .mo-plb-prev{right:1rem}.mo-plb-next{left:1rem}
 </style>
 
+<style id="mo-selects">/* ===== Masar Oman — unified filter dropdowns (all pages) ===== */
+html select.mo-input,html .ms-field select{
+ -webkit-appearance:none;appearance:none;box-sizing:border-box;width:100%;min-width:0;
+ height:46px;min-height:46px;margin:0;
+ padding-block:0!important;padding-right:14px!important;padding-left:40px!important;
+ font-family:inherit;font-size:15px;font-weight:600;line-height:44px;
+ color:#30252A;background-color:#fff!important;border:1px solid #E6D3B8;border-radius:14px;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 7.75 10 12.25l4.5-4.5' fill='none' stroke='%23AC7250' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;
+ background-repeat:no-repeat!important;background-size:18px 18px!important;background-position:left 13px center!important;
+ text-overflow:ellipsis;white-space:nowrap;overflow:hidden;cursor:pointer;
+ box-shadow:0 1px 2px rgba(48,37,42,.05);
+ transition:border-color .15s ease,box-shadow .15s ease,background-color .15s ease}
+html[dir="ltr"] select.mo-input,html[dir="ltr"] .ms-field select{background-position:right 13px center!important}
+html select.mo-input:dir(ltr),html .ms-field select:dir(ltr){background-position:right 13px center!important}
+html select.mo-input:hover,html .ms-field select:hover{border-color:#D9AD7B!important}
+html select.mo-input:focus,html .ms-field select:focus{outline:none;border-color:#AC7250!important;box-shadow:0 0 0 3px rgba(172,114,80,.22)}
+html select.mo-input:focus-visible,html .ms-field select:focus-visible{outline:none;border-color:#AC7250!important;box-shadow:0 0 0 3px rgba(172,114,80,.3)}
+html select.mo-input:disabled,html .ms-field select:disabled{opacity:.55;cursor:not-allowed}
+html select.mo-input option,html .ms-field select option{font-weight:500;color:#30252A;background:#fff}
+html select.mo-input::-ms-expand,html .ms-field select::-ms-expand{display:none}
+/* dark mode */
+html[data-theme="dark"] select.mo-input,html[data-theme="dark"] .ms-field select{
+ color:#F5F0EA;background-color:#202832!important;background-repeat:no-repeat!important;background-size:18px 18px!important;background-position:left 13px center!important;border-color:#3A3434!important;box-shadow:none;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 7.75 10 12.25l4.5-4.5' fill='none' stroke='%23E5A04B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important}
+html[data-theme="dark"] select.mo-input:hover,html[data-theme="dark"] .ms-field select:hover{border-color:#6a5a4a!important}
+html[data-theme="dark"] select.mo-input:focus,html[data-theme="dark"] .ms-field select:focus,html[data-theme="dark"] select.mo-input:focus-visible,html[data-theme="dark"] .ms-field select:focus-visible{border-color:#E5A04B!important;box-shadow:0 0 0 3px rgba(229,160,75,.25)}
+html[data-theme="dark"] select.mo-input option,html[data-theme="dark"] .ms-field select option{color:#F5F0EA;background:#202832}
+/* labels above dropdowns: one size/weight everywhere */
+html .ms-field>label,html label:has(>select.mo-input){font-size:12px;font-weight:600;line-height:1.4}
+html .ms-field{min-width:0}
+html label:has(>select.mo-input){min-width:0}
+/* phones: 16px text stops iOS zooming in when a dropdown is tapped; a little taller for touch */
+@media (max-width:640px){html select.mo-input,html .ms-field select{font-size:16px;height:48px;min-height:48px;line-height:46px}}
+html[dir="ltr"] select.mo-input,html[dir="ltr"] .ms-field select{padding-left:14px!important;padding-right:40px!important}
+html select.mo-input:dir(ltr),html .ms-field select:dir(ltr){padding-left:14px!important;padding-right:40px!important}
+html[dir="ltr"][data-theme="dark"] select.mo-input,html[dir="ltr"][data-theme="dark"] .ms-field select,html[data-theme="dark"] select.mo-input:dir(ltr),html[data-theme="dark"] .ms-field select:dir(ltr){background-position:right 13px center!important}
+html[dir="ltr"] select.mo-input,html[dir="ltr"] .ms-field select{background-position:right 13px center!important}
+</style>
 </head>
 <body>
 <div id="splash" role="status" aria-label="جارٍ تحميل مسار عُمان"><div class="w">
