@@ -1,0 +1,6 @@
+Hero slider photos (home page) - downloaded at full resolution from Wikimedia Commons; resized, lightly contrast/colour-corrected and sharpened (derivative works).
+src/*.jpg are high-resolution masters (3200 px wide); the untouched originals are on the Commons pages below.
+nizwa: Nizwa, forte, interno, corpo circolare 00.jpg - Francesco Bini, CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Nizwa%2C_forte%2C_interno%2C_corpo_circolare_00.jpg (original 5480x4164)
+jebel-shams: Jebel Shams Canyon 1.jpg - albinfo, CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Jebel_Shams_Canyon_1.jpg (original 4912x3264)
+wahiba: Wahiba Sands (5).jpg - Andries Oudshoorn, CC BY-SA 2.0 - https://commons.wikimedia.org/wiki/File:Wahiba_Sands_%285%29.jpg (original 4368x2912)
+daymaniyat: Dimaniyat Islands 3.jpg - Wusel007, CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Dimaniyat_Islands_3.jpg (original 4000x3000)
