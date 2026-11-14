@@ -6045,5 +6045,37 @@ html:root{--ms-hotel:#713849}html[data-theme="dark"]{--ms-hotel:#8A4458}
 @media (prefers-reduced-motion:reduce){:root[data-theme],:root[data-theme] body::before,:root[data-theme] body::after{transition:none}}
 @media print{:root[data-theme] body::before,:root[data-theme] body::after{display:none}}
 </style>
+<style id="mo-contrast">
+/* ===== Contrast fixes (WCAG AA: 4.5:1 normal text, 3:1 large text/graphics) ===== */
+/* Copper buttons & badges: deeper gradient start so white text reaches >= 4.7:1 */
+.mo-btn-accent,.bg-\[var\(--orange\)\]{background:linear-gradient(135deg,#9E6644,#8E5A3D)!important;color:#fff!important}
+.bg-\[var\(--orange\)\] .text-white\/90{color:#fff}
+/* Selected tabs and category tags: a light shade under the white text (dark mode uses lighter category colours) */
+:root:not([data-theme="dark"]) .ms-tab[aria-selected="true"]{background-image:linear-gradient(rgba(0,0,0,.14),rgba(0,0,0,.14))}
+html[data-theme="dark"] .ms-tab[aria-selected="true"],html[data-theme="dark"] .ms-card__tag{background-image:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45))}
+/* Gold badges in dark mode (trip counter, "book" button): dark text */
+html[data-theme="dark"] .mo-count,html[data-theme="dark"] .mo-rc-book{color:#151B23}
+/* Home: "featured events" and "scientific tourism" (incl. ليالي مسقط) — titles were dark-on-dark in dark mode */
+html[data-theme="dark"] #mo-extra h2,html[data-theme="dark"] #mo-extra h3{color:var(--ink)}
+html[data-theme="dark"] #mo-extra .w{color:#8E5A3D}
+html[data-theme="dark"] #mo-extra .geo .w{color:#713849}
+/* Tags (Ramsar, guide recommended...) were dark-on-dark in dark mode */
+html[data-theme="dark"] .mo-tag{color:var(--petrol)}
+/* Reserve page boxes stayed white/light-grey in dark mode under light text */
+html[data-theme="dark"] .mo-rcbox{background:var(--ms-surface);border-color:var(--ms-border)}
+html[data-theme="dark"] .bg-\[var\(--sand\)\] .rounded-2xl.bg-white\/70{background:var(--ms-surface)}
+/* Hotel ratings: stars >= 3:1, rating number >= 4.5:1 on white cards */
+:root:not([data-theme="dark"]) .ms-stars{color:#B7791F}
+:root:not([data-theme="dark"]) .ms-stars b{color:#8A5A0B}
+/* Home hero kicker on the light hero */
+:root:not([data-theme="dark"]) .mo-hh-kicker{color:#8E5A3D}
+/* Low-opacity helper text: "Photo coming soon", filter-chip counts, adventure card meta line */
+.mo-pph small{opacity:.95}
+.mo-chip .opacity-60{opacity:.82}
+.mo-adv .opacity-80{opacity:.95}
+/* Desert adventure card: slightly deeper sand tone under the white text (3.8:1 -> 5.2:1) */
+.mo-adv-desert{background-color:#A35A26}
+.mo-adv-desert .bg-white\/20{background:rgba(0,0,0,.2)}
+</style>
 </body>
 </html>
