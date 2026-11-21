@@ -1,5 +1,5 @@
 -- ============================================================================================================
--- Masar Oman — review backend for Supabase (run once in the SQL editor; safe to re-run).
+-- Masar Oman — 02 review backend for Supabase. Run AFTER 01-caravan-submissions.sql (safe to re-run).
 --
 -- What it gives you
 --   * mo_applications : registrations from companies, guides, teams, shops and rental offices (PRIVATE)
@@ -30,7 +30,7 @@ create or replace function public.mo_is_reviewer() returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (select 1 from public.mo_reviewers where user_id = auth.uid());
 $$;
-revoke all on function public.mo_is_reviewer() from public;
+revoke all on function public.mo_is_reviewer() from public, anon;
 grant execute on function public.mo_is_reviewer() to authenticated;
 
 -- ---------- applications (private) ----------
@@ -179,19 +179,17 @@ end $$;
 
 do $$ declare f text; begin
   foreach f in array array['mo_approve(text,boolean,boolean,text)','mo_set_status(text,text,text)','mo_set_listing_hidden(text,boolean)','mo_handle_report(text,text,text)','rv_set_status(text,text,text)'] loop
-    execute 'revoke all on function public.' || f || ' from public';
+    execute 'revoke all on function public.' || f || ' from public, anon';
     execute 'grant execute on function public.' || f || ' to authenticated';
   end loop;
 end $$;
 
--- ---------- caravan submissions (created by docs/caravan-submissions.sql) become reviewable ----------
-create table if not exists public.rv_submissions (
-  id bigserial primary key, ref text not null unique, kind text not null check (kind in ('listing','correction')), site_id text,
-  data jsonb not null, files text[] not null default '{}',
-  status text not null default 'pending' check (status in ('pending','approved','rejected','spam')),
-  reviewer_note text, created_at timestamptz not null default now(), reviewed_at timestamptz
-);
-alter table public.rv_submissions enable row level security;
+-- ---------- caravan submissions (table created by 01-caravan-submissions.sql) become reviewable ----------
+do $$ begin
+  if to_regclass('public.rv_submissions') is null then
+    raise exception 'Run 01-caravan-submissions.sql first (it creates rv_submissions).';
+  end if;
+end $$;
 drop policy if exists "reviewers read rv submissions" on public.rv_submissions;
 create policy "reviewers read rv submissions" on public.rv_submissions for select to authenticated using (public.mo_is_reviewer());
 
@@ -206,7 +204,6 @@ drop policy if exists "reviewers read licence files" on storage.objects;
 create policy "reviewers read licence files" on storage.objects for select to authenticated
   using (bucket_id in ('mo-licences','rv-submissions') and public.mo_is_reviewer());
 
--- ---------- after running ----------
--- 1) Authentication > Users > Add user (your reviewer e-mail + a strong password).
--- 2) insert into public.mo_reviewers(user_id) select id from auth.users where email = 'REVIEWER@EXAMPLE.COM';
--- 3) Send the Project URL and the anon public key (Settings > API). Never send the service_role key.
+-- ---------- next ----------
+-- Create the reviewer account in Authentication > Users (password typed there, never in a file), then run
+-- 03-make-reviewer.sql with that e-mail. Website config uses only the Project URL and the publishable (anon) key.

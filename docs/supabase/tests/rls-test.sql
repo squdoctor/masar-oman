@@ -1,3 +1,4 @@
+-- LOCAL TESTS ONLY — run after tests/supabase-shim.sql, 01 and 02 on a throw-away PostgreSQL database.
 -- RLS behaviour tests. Each block prints PASS/FAIL through RAISE NOTICE.
 \set ON_ERROR_STOP 0
 insert into auth.users values ('11111111-1111-1111-1111-111111111111','reviewer@test'),('22222222-2222-2222-2222-222222222222','someone@test');

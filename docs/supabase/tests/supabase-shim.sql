@@ -1,5 +1,6 @@
+-- LOCAL TESTS ONLY — never run this on Supabase. Imitates Supabase roles, auth and storage on a plain PostgreSQL.
 -- Minimal local imitation of the Supabase pieces the backend relies on (TEST ONLY, never run on Supabase).
-create role anon nologin; create role authenticated nologin;
+do $$ begin if not exists (select 1 from pg_roles where rolname='anon') then create role anon nologin; end if; if not exists (select 1 from pg_roles where rolname='authenticated') then create role authenticated nologin; end if; end $$;
 create schema auth; create schema storage;
 create table auth.users (id uuid primary key, email text);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;

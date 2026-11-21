@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-mUA1d6PVrHO3O8Q4AtPeumJPA1wl9hhOCHm25xuFnNE='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-bT7jrBDMuKiP2ZFp79A9i+sVWV+n+BFgFTykCRfOKUE='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>لوحة المراجعة — مسار عُمان | Review dashboard — MASAR OMAN</title>
 <style>
 :root{--burg:#713849;--copper:#AC7250;--ivory:#FBF7F0;--ink:#2a1d22;--soft:#6b5a60;--line:#e6dbd0;--ok:#1f7a4a;--okbg:#e3f4ea;--warn:#8a5a00;--warnbg:#fff1d6;--bad:#9b1c1c;--badbg:#fde2e2}
@@ -62,7 +62,7 @@ a{color:var(--burg)}
   var S = { tok: null, tab: 'apps', filter: 'pending', items: [], listings: [], open: null, msg: '' };
   try { S.tok = sessionStorage.getItem('mo-admin-tok'); } catch (e) {}
   var app = document.getElementById('app');
-  function H(json) { var h = { apikey: B.key, Authorization: 'Bearer ' + (S.tok || B.key) }; if (json) h['Content-Type'] = 'application/json'; return h; }
+  function H(json) { var h = { apikey: B.key }; if (S.tok) h.Authorization = 'Bearer ' + S.tok; else if (/^eyJ/.test(B.key)) h.Authorization = 'Bearer ' + B.key; if (json) h['Content-Type'] = 'application/json'; return h; }
   function api(path, opt) { return fetch(B.url + path, Object.assign({ headers: H(opt && opt.body) }, opt || {})).then(function (r) { if (r.status === 401) { logout(); throw new Error('401'); } return r.text().then(function (x) { if (!r.ok) throw new Error(x.slice(0, 200) || r.status); return x ? JSON.parse(x) : null; }); }); }
   function rpc(fn, args) { return api('/rest/v1/rpc/' + fn, { method: 'POST', body: JSON.stringify(args) }); }
   function logout() { S.tok = null; try { sessionStorage.removeItem('mo-admin-tok'); } catch (e) {} draw(); }

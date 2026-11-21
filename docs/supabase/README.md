@@ -1,32 +1,54 @@
-# Masar Oman — review backend (Supabase)
+# مسار عُمان — نظام المراجعة على Supabase | Review backend
 
-Status: **prepared, not connected.** The website forms (#join, #report) and the review dashboard (`admin.html`)
-are live but switched off: they say so on screen and send nothing until a Supabase project is connected.
+**الحالة:** جاهز وغير مربوط بعد. نموذج «أضف نشاطك السياحي» والإبلاغ عن الأخطاء ولوحة المراجعة (`admin.html`)
+منشورة لكنها معطّلة وتقول ذلك صراحة، ولا ترسل شيئاً حتى يُربط مشروع Supabase.
 
-## What it does
-| Piece | Who can use it |
-| --- | --- |
-| `mo_apply()` — companies, guides, teams, shops, rental offices register | Public website (anon key) |
-| `mo_report()` — visitors report wrong information | Public website (anon key) |
-| Private bucket `mo-licences` — licence documents | Public can upload into its own reference folder only; never read or list |
-| `mo_applications`, `mo_reports`, `rv_submissions` | Reviewers only |
-| `mo_approve()`, `mo_set_status()`, `mo_handle_report()`, `mo_set_listing_hidden()`, `rv_set_status()` | Reviewers only |
-| `mo_listings` — what appears on the site after approval | Everyone can read rows that are approved and not hidden |
+## الملفات بالترتيب
+| الملف | ما يفعله | متى |
+| --- | --- | --- |
+| `01-caravan-submissions.sql` | جدول طلبات الكرفانات الخاص، دالة الإرسال، مخزن الملفات الخاص `rv-submissions` | أولاً |
+| `02-masar-backend.sql` | المراجعون، طلبات الجهات (خاصة)، المنشور (عام بعد الاعتماد)، البلاغات (خاصة)، مخزن التراخيص الخاص `mo-licences`، دوال المراجعة | ثانياً |
+| `03-make-reviewer.sql` | يمنح حساباً موجوداً صلاحية المراجعة (بالبريد فقط، دون كلمة مرور) | ثالثاً |
+| `tests/` | اختبارات محلية على PostgreSQL فقط — **لا تُشغَّل على Supabase** | — |
 
-Nothing is ever published automatically. Approval copies only the public fields; private contact details and
-licence files are never published. The "licence verified" badge appears only when a reviewer ticks
-"I verified the licence with the issuing body"; the licence number is shown only if the applicant allowed it.
+لا يتكرر أي جدول: `02` لا ينشئ جدول الكرفانات، بل يتحقق من وجوده ويتوقف برسالة واضحة إن لم يُشغَّل `01` قبله.
+كل الملفات آمنة لإعادة التشغيل.
 
-## Connect it (about 10 minutes)
-1. Create a free project at supabase.com (region close to Oman).
-2. SQL editor → run `docs/caravan-submissions.sql`, then `docs/supabase/masar-backend.sql` (safe to re-run).
-3. Authentication → Users → Add user: the reviewer's e-mail and a strong password.
-4. SQL editor: `insert into public.mo_reviewers(user_id) select id from auth.users where email = 'REVIEWER@EMAIL';`
-5. Settings → API: copy the **Project URL** and the **anon public** key. Never share the `service_role` key
-   (the build refuses it).
-6. Rebuild with `MO_SB_URL=<url> MO_SB_KEY=<anon key> bash all.sh`, test, publish.
+## من يستطيع ماذا (Row Level Security)
+| الجهة | تستطيع | لا تستطيع |
+| --- | --- | --- |
+| الزائر (المفتاح العام في الموقع) | إرسال طلب عبر `mo_apply`، وبلاغ عبر `mo_report`، وطلب كرفانات عبر `rv_submit`؛ رفع ملف داخل مجلد مرجعه فقط؛ قراءة الجهات **المعتمدة غير المخفية** | قراءة أي طلب أو بلاغ أو بيانات تواصل خاصة؛ قراءة أو سرد أي وثيقة ترخيص؛ الاعتماد أو تغيير الحالة؛ استدعاء دوال المراجعة (مسحوبة منه على مستوى قاعدة البيانات) |
+| مستخدم مسجّل ليس مراجعاً | ما يستطيعه الزائر | كل ما سبق، وإضافة نفسه مراجعاً |
+| المراجع (موجود في `mo_reviewers`) | قراءة الطلبات والبلاغات وفتح الوثائق برابط مؤقت 5 دقائق؛ الاعتماد والرفض وطلب معلومات؛ إخفاء المنشور القديم | تعديل جدول المراجعين من الموقع |
 
-## Tested
-`rls-test.sql` runs against a local PostgreSQL 16 with `supabase-shim.sql` (imitation of Supabase roles, `auth` and
-`storage`; test only, never run it on Supabase): 34 checks covering what anon, a signed-in non-reviewer and a
-reviewer can and cannot do.
+- لا شيء يُنشر تلقائياً. الاعتماد ينسخ **البيانات العامة فقط**؛ بيانات التواصل الخاصة ووثائق التراخيص لا تُنشر أبداً.
+- شارة «ترخيص متحقَّق منه» لا تظهر إلا إذا أكّد المراجع أنه تحقق مع الجهة المصدِرة؛ ورقم الترخيص لا يُعرض إلا بإذن صاحبه وبعد التحقق.
+- الفرق غير المرخصة تظهر «فريق مجتمعي» ولا تُصنّف مشغّلاً معتمداً.
+
+## خطوات الإعداد (حوالي 15 دقيقة)
+1. **أنشئ المشروع:** في supabase.com أنشئ مشروعاً جديداً باسم `masar-oman`. احفظ كلمة مرور قاعدة البيانات في مدير كلمات المرور لديك؛ لا ترسلها لأحد ولا تحتاجها أنا.
+2. **أغلق التسجيل العام:** في إعدادات Authentication عطّل خيار السماح للمستخدمين الجدد بالتسجيل (Allow new users to sign up). المراجعون يُضافون يدوياً فقط.
+3. **شغّل الملفات بالترتيب في SQL Editor:** الصق محتوى `01-caravan-submissions.sql` ثم Run، ثم `02-masar-backend.sql` ثم Run.
+4. **أنشئ حساب المشرف دون أي سر في GitHub:** Authentication ← Users ← Add user ← Create new user. اكتب بريد المشرف وكلمة مرور قوية **هناك فقط**، وفعّل Auto Confirm User.
+5. **امنحه الصلاحية:** افتح `03-make-reviewer.sql` في SQL Editor، ضع بريد المشرف مكان `REVIEWER@EXAMPLE.COM` (في المحرر فقط، لا تحفظه في الملف)، ثم Run. يجب أن يظهر سطر واحد ببريده.
+6. **أرسل لي شيئين فقط:** من Settings ← API Keys: **Project URL** و**Publishable key** (`sb_publishable_…`؛ في المشاريع القديمة: مفتاح `anon` العام).
+
+**لا ترسل أبداً:** الـ Secret key (`sb_secret_…`) أو `service_role`، كلمة مرور قاعدة البيانات، كلمة مرور المشرف. أداة البناء ترفض المفاتيح السرية تلقائياً.
+
+**لماذا يجوز وضع المفتاح العام في الموقع؟** صُمّم ليكون علنياً، وصلاحياته محصورة بسياسات RLS أعلاه. السرّية الحقيقية في المفاتيح السرية وكلمات المرور، ولا يوضع أيّ منها في GitHub.
+
+## بعد الربط — الاختبار على النظام الحقيقي
+- إرسال طلب حقيقي بوثيقة تجريبية، وبلاغ حقيقي، من الموقع المنشور.
+- محاولات قراءة الطلبات والبلاغات والوثائق بالمفتاح العام (يجب أن تُرفض أو تعود فارغة)، ومحاولة الاعتماد (يجب أن تُرفض).
+- دخول المشرف بنفسه إلى `admin.html`، ثم الاعتماد، والتأكد أن ما يظهر للعامة هو البيانات العامة فقط، ثم إخفاء الطلب التجريبي.
+- العربية والإنجليزية، الجوال والكمبيوتر.
+
+## صيانة
+- ملفات مرفوعة دون طلب مكتمل (يراجعها المشرف في SQL Editor):
+  `select name, created_at from storage.objects where bucket_id = 'mo-licences' and split_part(name,'/',1) not in (select ref from public.mo_applications);`
+- إزالة مراجع: انظر آخر سطر في `03-make-reviewer.sql`.
+
+---
+**English summary.** Run `01` → `02` in the Supabase SQL editor, disable public sign-ups, create the reviewer in
+Authentication > Users (password typed there only), run `03` with the reviewer e-mail, then share only the Project URL
+and the publishable key. Never share secret / service_role keys or any password. `tests/` is for local PostgreSQL only.
