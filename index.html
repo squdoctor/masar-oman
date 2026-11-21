@@ -7993,7 +7993,7 @@ html[data-theme="dark"] .bg-\[var\(--sand\)\] .rounded-2xl.bg-white\/70{backgrou
 /* ===== بطاقات الأماكن السياحية: صورة كبيرة + اسم فوق تدرج + شرح ===== */
 .mo-pcard{border-radius:24px;transition:transform .25s ease,box-shadow .25s ease}
 .mo-pcard:hover{transform:translateY(-3px);box-shadow:0 22px 44px -26px rgba(21,27,35,.55)}
-.mo-pcard-media{position:relative;aspect-ratio:5/4;overflow:hidden;background:#151B23;flex:none}
+.mo-pcard-media{position:relative;aspect-ratio:6/5;overflow:hidden;background:#151B23;flex:none}
 .mo-pcard-media>.mo-galbox,.mo-pcard-media>figure,.mo-pcard-media>.mo-pph{position:absolute;inset:0;width:100%;height:100%!important;margin:0;border-radius:0}
 .mo-pcard-media img{width:100%;height:100%;object-fit:cover;object-position:center 45%}
 .mo-pcard-media .mo-pph>span:not(.mo-pph-ic),.mo-pcard-media .mo-pph>small{display:none}
@@ -8010,6 +8010,7 @@ html[lang="en"] .mo-pcard-en{display:none}
 .mo-pcard-desc{margin:0;font-size:.9rem;line-height:1.75;color:var(--ink-soft);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .mo-pcard-tags{margin:0;padding:0;list-style:none}
 html:not([lang="en"]) .mo-pcard-en{text-align:right}
+@media (min-width:1024px) and (max-width:1279px){.mo-pcard-media{aspect-ratio:1/1}}
 @media (max-width:639px){.mo-pcard-media{aspect-ratio:1/1}.mo-pcard-title{font-size:1.25rem}}
 @media (prefers-reduced-motion:reduce){.mo-pcard,.mo-pcard:hover{transition:none;transform:none}}
 .mo-pgrid{gap:20px}
